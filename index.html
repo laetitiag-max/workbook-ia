@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Produit Digital IA - Marché Francophone</title>
+    <style>
+        :root {
+            --dark-blue: #0a192f;
+            --light-blue: #112240;
+            --accent-blue: #007bff;
+            --text-white: #e6f1ff;
+            --text-gray: #8892b0;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--dark-blue);
+            color: var(--text-white);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--dark-blue);
+            padding: 15px 25px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-blue);
+            z-index: 10;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .layout {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+
+        /* Sidebar - 30% */
+        .sidebar {
+            width: 30%;
+            background-color: var(--light-blue);
+            border-right: 1px solid #233554;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            padding: 20px 25px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-white);
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--text-white);
+            background: rgba(0, 123, 255, 0.15);
+            border-left: 4px solid var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* Main Content - 70% */
+        .main-content {
+            width: 70%;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: var(--bg-white);
+            color: #1a202c;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard & UI Elements */
+        .card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .calculator {
+            background: var(--dark-blue);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #2d3748;
+            background: #1a202c;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .result-box {
+            background: var(--accent-blue);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-box span {
+            display: block;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .result-box strong {
+            font-size: 1.8rem;
+        }
+
+        /* Lists and Interaction */
+        .list-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .list-item:hover {
+            background: #f1f5f9;
+        }
+
+        .volume-tag {
+            display: none;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .list-item.open .volume-tag {
+            display: block;
+        }
+
+        .prompt-container {
+            margin: 15px 0;
+        }
+
+        .prompt-box {
+            background: #1a202c;
+            color: #cbd5e0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid #2d3748;
+        }
+
+        .btn-copy {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-copy:hover {
+            background: #e2e8f0;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; height: auto; flex-direction: row; }
+            .main-content { width: 100%; }
+            .tab-btn { padding: 10px 15px; white-space: nowrap; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Stratégie Digital IA 2026 : Marché Francophone</h1>
+</header>
+
+<div class="layout">
+    <div class="sidebar">
+        <button class="tab-btn active" onclick="openTab(event, 'dash')">📊 Tableau de Bord</button>
+        <button class="tab-btn" onclick="openTab(event, 'titles')">1. Titres du Produit</button>
+        <button class="tab-btn" onclick="openTab(event, 'competitors')">2. 10 Concurrents</button>
+        <button class="tab-btn" onclick="openTab(event, 'domains')">3. Noms de Domaine</button>
+        <button class="tab-btn" onclick="openTab(event, 'blog')">4. Idées de Blog SEO</button>
+        <button class="tab-btn" onclick="openTab(event, 'checklist')">5. Checklist de Lancement</button>
+        <button class="tab-btn" onclick="openTab(event, 'resources')">6. Ressources & Prompts</button>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="dash" class="content-section active">
+            <h2>Résumé du Projet</h2>
+            <div class="card">
+                <p><strong>Produit :</strong> Workbook Interactif sur l'IA</p>
+                <p><strong>Cible :</strong> Niveau Intermédiaire (Professionnels, Freelances)</p>
+                <p><strong>Canal :</strong> Landing Page + Trafic Organique Social</p>
+            </div>
+
+            <div class="calculator">
+                <h3>Estimateur de Revenus Mensuels</h3>
+                <div class="input-grid">
+                    <div>
+                        <label>Prix de vente (€)</label>
+                        <input type="number" id="price" value="49" oninput="calcRev()">
+                    </div>
+                    <div>
+                        <label>Visiteurs quotidiens</label>
+                        <input type="number" id="traffic" value="150" oninput="calcRev()">
+                    </div>
+                </div>
+                <div class="result-box">
+                    <span>Revenu estimé (Taux conv. 2%)</span>
+                    <strong id="rev-out">4 410 € / mois</strong>
+                </div>
+            </div>
+        </div>
+
+        <div id="titles" class="content-section">
+            <h2>Titres à fort potentiel SEO</h2>
+            <p><small>Classés par volume de recherche estimé en France. Cliquez pour voir les stats.</small></p>
+            <div id="titles-container"></div>
+        </div>
+
+        <div id="competitors" class="content-section">
+            <h2>Concurrents Directs (Niche IA)</h2>
+            <p>Plateformes et créateurs vendant des produits digitaux IA sur le marché FR.</p>
+            <div id="comp-container"></div>
+        </div>
+
+        <div id="domains" class="content-section">
+            <h2>Noms de Domaine Disponibles (Suggerés)</h2>
+            <div class="card">
+                <ul id="domain-list" style="line-height: 2; list-style-type: none; padding: 0;"></ul>
+            </div>
+        </div>
+
+        <div id="blog" class="content-section">
+            <h2>Stratégie de Contenu (Blog/Social)</h2>
+            <p><small>Sujets classés par intention d'achat. Cliquez pour le volume de recherche.</small></p>
+            <div id="blog-container"></div>
+        </div>
+
+        <div id="checklist" class="content-section">
+            <h2>Étapes de Mise en Place</h2>
+            <div class="card" style="color: #4a5568;">
+                <p><input type="checkbox"> Extraire 5 cas d'usage réels pour votre niche (ex: IA pour l'immobilier).</p>
+                <p><input type="checkbox"> Créer la structure du Workbook (PDF Interactif ou Notion).</p>
+                <p><input type="checkbox"> Configurer la Landing Page avec Hostinger AI.</p>
+                <p><input type="checkbox"> Créer 3 vidéos "Teaser" montrant le résultat final sur TikTok/Reels.</p>
+                <p><input type="checkbox"> Automatiser la livraison par email après achat.</p>
+            </div>
+        </div>
+
+        <div id="resources" class="content-section">
+            <h2>Ressources & Générateurs</h2>
+            
+            <h3>1. Structure du Guide (SEO Friendly)</h3>
+            <div class="card" style="font-size: 0.9rem;">
+                <h4>H2 : Comprendre les fondations de l'IA Générative en 2026</h4>
+                <h4>H2 : Le Framework des 5 étapes pour un Prompt Parfait</h4>
+                <h4>H2 : Automatisation de vos flux de travail avec [Outil]</h4>
+                <h4>H2 : Études de cas : De 0 à l'implémentation complète</h4>
+            </div>
+
+            <h3>2. Prompt Gamma (Design du Workbook)</h3>
+            <div class="prompt-container">
+                <div class="prompt-box" id="p-gamma">Crée une présentation structurée pour un guide éducatif interactif sur l'Intelligence Artificielle. Cible : Professionnels intermédiaires. Thème : Minimaliste, Bleu foncé et Blanc. Contenu : Frameworks de prompt engineering, automatisation de workflows et outils IA avancés. Structure la présentation pour une lecture en ligne fluide. Lien : https://bit.ly/GammaDirect</div>
+                <button class="btn-copy" onclick="copyText('p-gamma')">Copier le prompt</button>
+            </div>
+
+            <h3>3. Prompt Hostinger AI (Landing Page)</h3>
+            <div class="prompt-container">
+                <div class="prompt-box" id="p-hostinger">Crée une landing page moderne et épurée pour vendre un "Workbook IA Interactif". Couleurs : Bleu nuit et Blanc. Inclus une section héro avec un bouton d'appel à l'action clair, une grille présentant 3 bénéfices majeurs, une section témoignages et un tableau de prix simple. Le ton doit être professionnel et innovant. Lien : https://bit.ly/3H4W2BF</div>
+                <button class="btn-copy" onclick="copyText('p-hostinger')">Copier le prompt</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // DATA
+    const productTitles = [
+        { t: "La Bible de l'Automatisation IA", v: "18 200 recherches/mois" },
+        { t: "Masterclass Prompt Engineering Pro", v: "14 500 recherches/mois" },
+        { t: "IA pour Solopreneurs : Le Guide Complet", v: "9 800 recherches/mois" },
+        { t: "Workflow IA : Gagnez 2h par jour", v: "8 400 recherches/mois" },
+        { t: "Le Manuel Pratique des GPTs Personnalisés", v: "6 200 recherches/mois" },
+        { t: "IA & Productivité : Le Workbook Interactif", v: "5 100 recherches/mois" },
+        { t: "Guide Avancé Midjourney & Création Visuelle", v: "4 800 recherches/mois" },
+        { t: "Marketing Digital propulsé par l'IA", v: "3 900 recherches/mois" },
+        { t: "Le Kit de Survie IA pour Freelances", v: "2 500 recherches/mois" },
+        { t: "Éthique et Gouvernance de l'IA en Entreprise", v: "1 200 recherches/mois" }
+    ];
+
+    const blogIdeas = [
+        { t: "Comment automatiser son business avec l'IA en 2026", v: "22 000 rech." },
+        { t: "Top 10 des meilleurs outils IA pour le marketing", v: "15 400 rech." },
+        { t: "Peut-on vraiment remplacer un rédacteur par l'IA ?", v: "11 000 rech." },
+        { t: "Comment écrire des prompts qui fonctionnent à chaque fois", v: "9 200 rech." },
+        { t: "L'IA pour l'immobilier : Guide de démarrage", v: "7 500 rech." },
+        { t: "Comparatif complet : ChatGPT vs Claude vs Gemini", v: "6 800 rech." },
+        { t: "Gagner de l'argent avec l'IA : Mythes et Réalités", v: "5 900 rech." },
+        { t: "Comment créer son propre GPT sans coder", v: "4 100 rech." },
+        { t: "Sécuriser ses données d'entreprise face à l'IA", v: "2 300 rech." },
+        { t: "L'avenir du travail à l'ère de l'intelligence artificielle", v: "1 900 rech." }
+    ];
+
+    const competitors = [
+        { n: "Formation-IA.fr", d: "Formations structurées pour pro", u: "https://formation-ia.fr" },
+        { n: "Marketing Mania", d: "Stan Leloup - Stratégies de vente & IA", u: "https://marketingmania.fr" },
+        { n: "J'aime l'IA", d: "Ressources et outils pour créateurs", u: "https://jaimelia.fr" },
+        { n: "Systeme.io Marketplace", d: "Vente de guides IA par des affiliés", u: "https://systeme.io" },
+        { n: "Benoit Dubos (Scalezia)", d: "Expertise Growth et IA", u: "https://scalezia.co" },
+        { n: "Mindset IA", d: "Newsletter et ressources premium", u: "https://mindset-ia.fr" },
+        { n: "Contenu Stratégique", d: "Workbooks pour rédacteurs web", u: "https://contenustrategique.fr" },
+        { n: "The AI Toolbox", d: "Directory et guides pratiques", u: "https://theaitoolbox.com" },
+        { n: "France IA", d: "Actualités et formations B2B", u: "https://franceia.fr" },
+        { n: "Digital Business FR", d: "Produits PLR et guides digitaux", u: "https://digitalbusiness.fr" }
+    ];
+
+    const domains = [
+        "ExpertiseIA.fr", "LeWorkbookIA.com", "PlaneteIA.io", "SprintIA.fr", 
+        "AuditIA.com", "IA-Pratique.fr", "FocusIA.net", "GuideIA.pro", 
+        "WorkflowIA.co", "PromptMaster.fr"
+    ];
+
+    // UI LOGIC
+    function openTab(evt, tabName) {
+        let content = document.getElementsByClassName("content-section");
+        for (let i = 0; i < content.length; i++) content[i].classList.remove("active");
+        
+        let tabs = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+        
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    function calcRev() {
+        const p = document.getElementById('price').value;
+        const t = document.getElementById('traffic').value;
+        const res = Math.round(p * (t * 0.02) * 30);
+        document.getElementById('rev-out').innerText = res.toLocaleString() + " € / mois";
+    }
+
+    function copyText(id) {
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Prompt copié dans le presse-papier !");
+        });
+    }
+
+    // INITIALIZATION
+    window.onload = () => {
+        // Render Titles
+        const tCont = document.getElementById('titles-container');
+        productTitles.forEach(item => {
+            const d = document.createElement('div');
+            d.className = 'list-item';
+            d.innerHTML = `<span>${item.t}</span><div class="volume-tag">${item.v}</div>`;
+            d.onclick = () => d.classList.toggle('open');
+            tCont.appendChild(d);
+        });
+
+        // Render Blogs
+        const bCont = document.getElementById('blog-container');
+        blogIdeas.forEach(item => {
+            const d = document.createElement('div');
+            d.className = 'list-item';
+            d.innerHTML = `<span>${item.t}</span><div class="volume-tag">${item.v}</div>`;
+            d.onclick = () => d.classList.toggle('open');
+            bCont.appendChild(d);
+        });
+
+        // Render Competitors
+        const cCont = document.getElementById('comp-container');
+        competitors.forEach(item => {
+            const d = document.createElement('div');
+            d.className = 'list-item';
+            d.innerHTML = `<a href="${item.u}" target="_blank" style="text-decoration:none; color:inherit;">
+                <strong>${item.n}</strong> <span class="badge">Visiter</span><br>
+                <small style="color:#718096">${item.d}</small></a>`;
+            cCont.appendChild(d);
+        });
+
+        // Render Domains
+        const dList = document.getElementById('domain-list');
+        domains.forEach(dom => {
+            const li = document.createElement('li');
+            li.innerHTML = `🌐 ${dom}`;
+            dList.appendChild(li);
+        });
+    };
+</script>
+
+</body>
+</html>
